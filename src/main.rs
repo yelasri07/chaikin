@@ -1,18 +1,9 @@
 use macroquad::prelude::*;
+
 mod chaikin;
 use chaikin::*;
 
-fn window_conf() -> Conf {
-    Conf {
-        window_title: "Fixed Window".to_owned(),
-        window_width: 500,
-        window_height: 700,
-        window_resizable: false,
-        ..Default::default()
-    }
-}
-
-#[macroquad::main(window_conf)]
+#[macroquad::main("CHAIKIN")]
 async fn main() {
     let mut points: Vec<Vec2> = Vec::new();
     let mut tmp_points: Vec<Vec2> = Vec::new();
@@ -23,7 +14,11 @@ async fn main() {
     loop {
         clear_background(BLACK);
 
-        if is_key_pressed(KeyCode::Enter) {
+        if is_key_pressed(KeyCode::Escape) {
+            break;
+        }
+
+        if is_key_pressed(KeyCode::Enter) && points.len() > 1 {
             started = true
         }
 
@@ -41,6 +36,12 @@ async fn main() {
                 tmp_points = chaikin(&points, step);
                 step += 1;
                 timer = get_time();
+            }
+
+            if step >= 7 {
+                tmp_points = points.clone();
+                timer = get_time();
+                step = 0;
             }
 
             for i in 0..tmp_points.len() - 1 {
