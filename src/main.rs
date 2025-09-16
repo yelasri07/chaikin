@@ -1,4 +1,6 @@
 use macroquad::prelude::*;
+mod chaikin;
+use chaikin::*;
 
 fn window_conf() -> Conf {
     Conf {
@@ -16,6 +18,7 @@ async fn main() {
     let mut tmp_points: Vec<Vec2> = Vec::new();
     let mut started = false;
     let mut step = 0;
+    let mut timer = get_time();
 
     loop {
         clear_background(BLACK);
@@ -34,13 +37,10 @@ async fn main() {
         }
 
         if started {
-            let timer = get_time();
-
-            println!("{}", timer);
-
-            if step < 7 {
+            if step < 7 && get_time() > timer + 0.5 {
                 tmp_points = chaikin(&points, step);
                 step += 1;
+                timer = get_time();
             }
 
             for i in 0..tmp_points.len() - 1 {
@@ -52,39 +52,4 @@ async fn main() {
 
         next_frame().await;
     }
-}
-
-fn chaikin(points: &Vec<Vec2>, iterations: usize) -> Vec<Vec2> {
-    let mut result = points.clone();
-
-    for _ in 0..iterations {
-        let mut new_points = Vec::new();
-
-        new_points.push(points[0]);
-
-        for i in 0..result.len() - 1 {
-            let p0 = result[i];
-            let p1 = result[i + 1];
-
-
-            let q = Vec2 {
-                x: 0.75 * p0.x + 0.25 * p1.x,
-                y: 0.75 * p0.y + 0.25 * p1.y,
-            };
-
-            let r = Vec2 {
-                x: 0.25 * p0.x + 0.75 * p1.x,
-                y: 0.25 * p0.y + 0.75 * p1.y,
-            };
-
-            new_points.push(q);
-            new_points.push(r);
-        }
-
-        new_points.push(points[points.len() - 1]);
-
-        result = new_points;
-    }
-
-    result
 }
