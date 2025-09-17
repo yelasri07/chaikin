@@ -18,6 +18,12 @@ async fn main() {
             break;
         }
 
+        if is_key_pressed(KeyCode::Delete) {
+            started = false;
+            step = 0;
+            points = vec![];
+        }
+
         if is_key_pressed(KeyCode::Enter) && points.len() > 1 {
             started = true
         }
