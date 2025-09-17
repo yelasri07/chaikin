@@ -28,7 +28,7 @@ async fn main() {
         }
 
         for point in points.iter() {
-            draw_circle(point.x, point.y, 5.0, Color::from_rgba(155, 200, 35, 255));
+            draw_circle_lines(point.x, point.y, 5.0, 1. ,Color::from_rgba(155, 200, 35, 255));
         }
 
         if started {
